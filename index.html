@@ -79,8 +79,6 @@
     height: 100%;
     padding-bottom: env(safe-area-inset-bottom);
     box-sizing: border-box;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
 
   /* Pickaxe embed full fill */
@@ -137,12 +135,7 @@
 
   startChatBtn.addEventListener('click', () => {
     welcomeDiv.style.display = 'none';
-    chatContainer.style.display = 'flex';
-
-    // Scroll chat container to bottom so input is visible after embed loads
-    setTimeout(() => {
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }, 300);
+    chatContainer.style.display = 'flex'; // flex so fills space properly
   });
 </script>
 

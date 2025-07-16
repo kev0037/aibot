@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>made my kev</title>
+<title>made by kev</title>
 
-<!-- Inter font from Google Fonts -->
+<!-- Inter font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
 
 <style>
@@ -15,10 +15,10 @@
     font-family: 'Inter', sans-serif;
     background: white;
     color: #111;
-    overflow: hidden; /* prevent scroll on body */
+    overflow: hidden; /* no scroll on body */
   }
 
-  /* Container for welcome screen */
+  /* Welcome container */
   .welcome-container {
     height: 100vh;
     width: 100vw;
@@ -50,7 +50,7 @@
     padding: 0.8rem 2.2rem;
     border-radius: 30px;
     border: none;
-    background: #3b82f6; /* blue */
+    background: #3b82f6;
     color: white;
     cursor: pointer;
     box-shadow: 0 4px 14px rgb(59 130 246 / 0.4);
@@ -64,24 +64,26 @@
     transform: scale(0.95);
   }
 
-  /* Chat embed container (hidden initially) */
+  /* Chat embed container */
   #chat-container {
     position: fixed;
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    background: white;
-    display: none; /* show on click */
+    margin: 0; padding: 0;
     box-sizing: border-box;
-    overflow: auto; /* allow scroll inside if needed */
+    display: none; /* hidden initially */
+    overflow: hidden; /* prevent scroll */
     z-index: 9999;
+    background: white;
   }
 
-  /* Pickaxe embed styling */
+  /* Pickaxe embed */
   #deployment-e8058249-b613-4701-8e16-bd69b6eb9c39 {
     width: 100% !important;
     height: 100% !important;
     min-height: 100vh;
+    margin: 0; padding: 0;
     box-sizing: border-box;
   }
 

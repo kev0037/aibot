@@ -19,7 +19,6 @@
       font-family: 'Inter', sans-serif;
       background: #ffffff;
       color: #111;
-      /* allow scrolling for embed chat on mobile */
       overflow: auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -37,35 +36,40 @@
     .welcome-container {
       max-width: 480px;
       width: 100%;
+      user-select: none;
     }
 
     h1 {
       font-size: 3.5rem;
       font-weight: 700;
       margin-bottom: 0.3em;
-      user-select: none;
     }
 
-    .interactive-area {
-      transition: transform 0.3s ease;
-      will-change: transform;
-      display: inline-block;
+    /* Container that holds subtitle and button side by side */
+    .subtitle-button-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.8rem;
+      /* Fix width so subtitle and button don’t shift */
+      width: 100%;
+      max-width: 480px;
     }
 
+    /* Subtitle container with fixed width to prevent button jump */
     .subtitle {
       font-size: 1.2rem;
       color: #555;
-      margin-bottom: 2.5rem;
       white-space: nowrap;
       overflow: hidden;
-      border-right: 0.15em solid #3b82f6;
-      min-height: 1.5em; /* keep height so no jump */
-      animation: blink-caret 0.75s step-end infinite;
+      min-height: 1.5em; /* keep height stable */
+      /* fix width so typing doesn't cause width jump */
+      width: 100%;
+      max-width: 100%;
+      font-weight: 500;
+      text-align: center;
+      letter-spacing: 0.02em;
       user-select: none;
-    }
-
-    @keyframes blink-caret {
-      50% { border-color: transparent; }
     }
 
     .chat-btn {
@@ -76,11 +80,10 @@
       background: #3b82f6;
       color: white;
       cursor: pointer;
-      overflow: hidden;
-      position: relative;
       box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
       transition: background 0.3s, transform 0.2s;
       user-select: none;
+      width: 170px; /* fixed width so button doesn't move */
     }
 
     .chat-btn:hover {
@@ -115,7 +118,7 @@
       display: none;
       flex: 1 1 auto;
       width: 100vw;
-      height: 100vh; /* fullscreen */
+      height: 100vh;
       position: fixed;
       top: 0;
       left: 0;
@@ -155,8 +158,9 @@
 
     @media (max-width: 480px) {
       h1 { font-size: 2.7rem; }
-      .subtitle { font-size: 1rem; margin-bottom: 2rem; }
-      .chat-btn { font-size: 1rem; padding: 0.7rem 1.8rem; }
+      .subtitle { font-size: 1rem; }
+      .chat-btn { font-size: 1rem; padding: 0.7rem 1.8rem; width: 140px; }
+      .subtitle-button-wrapper { gap: 1.5rem; }
     }
   </style>
 </head>
@@ -168,7 +172,8 @@
 
 <div class="welcome-container" id="welcome">
   <h1>Welcome to Kev AI</h1>
-  <div class="interactive-area">
+
+  <div class="subtitle-button-wrapper">
     <p class="subtitle" id="typing-subtitle"></p>
     <button class="chat-btn" id="startChatBtn">Let's Chat</button>
   </div>
@@ -186,7 +191,6 @@
   const chatContainer = document.getElementById('chat-container');
   const loading = document.getElementById('loading');
   const typingSubtitle = document.getElementById('typing-subtitle');
-  const interactiveArea = document.querySelector('.interactive-area');
 
   const fullText = "A versatile, ChatGPT-style assistant for any task.";
   let index = 0;
@@ -198,7 +202,6 @@
       index++;
       setTimeout(typeWriter, typingSpeed);
     } else {
-      // After typing complete, reset after 2.5s and repeat
       setTimeout(() => {
         typingSubtitle.textContent = '';
         index = 0;
@@ -207,22 +210,9 @@
     }
   }
 
-  // Start typing on page load
   window.onload = () => {
     typeWriter();
   };
-
-  // Hover tilt effect only on subtitle+button container
-  document.addEventListener('mousemove', (e) => {
-    const { innerWidth, innerHeight } = window;
-    const x = (e.clientX / innerWidth - 0.5) * 10;
-    const y = (e.clientY / innerHeight - 0.5) * 10;
-    interactiveArea.style.transform = `rotateX(${y}deg) rotateY(${-x}deg)`;
-  });
-
-  document.addEventListener('mouseleave', () => {
-    interactiveArea.style.transform = `rotateX(0deg) rotateY(0deg)`;
-  });
 
   startChatBtn.addEventListener('click', () => {
     welcomeDiv.style.display = 'none';

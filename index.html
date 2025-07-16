@@ -45,31 +45,30 @@
       margin-bottom: 0.3em;
     }
 
-    /* Container that holds subtitle and button side by side */
     .subtitle-button-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 1.8rem;
-      /* Fix width so subtitle and button don’t shift */
       width: 100%;
       max-width: 480px;
     }
 
-    /* Subtitle container with fixed width to prevent button jump */
     .subtitle {
       font-size: 1.2rem;
       color: #555;
       white-space: nowrap;
       overflow: hidden;
-      min-height: 1.5em; /* keep height stable */
-      /* fix width so typing doesn't cause width jump */
+      min-height: 1.5em;
       width: 100%;
       max-width: 100%;
       font-weight: 500;
       text-align: center;
       letter-spacing: 0.02em;
       user-select: none;
+      /* optional smooth font rendering */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     .chat-btn {
@@ -83,7 +82,9 @@
       box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
       transition: background 0.3s, transform 0.2s;
       user-select: none;
-      width: 170px; /* fixed width so button doesn't move */
+      width: 170px;
+      position: relative;
+      overflow: hidden;
     }
 
     .chat-btn:hover {
@@ -192,26 +193,45 @@
   const loading = document.getElementById('loading');
   const typingSubtitle = document.getElementById('typing-subtitle');
 
-  const fullText = "A versatile, ChatGPT-style assistant for any task.";
-  let index = 0;
+  const fullText = "A versatile, AI assistant for any task.";
   const typingSpeed = 50;
+  const deletingSpeed = 30;
+  const pauseAfterTyping = 2000;
+  const pauseAfterDeleting = 500;
 
-  function typeWriter() {
-    if (index < fullText.length) {
-      typingSubtitle.textContent += fullText.charAt(index);
-      index++;
-      setTimeout(typeWriter, typingSpeed);
+  let index = 0;
+  let isDeleting = false;
+
+  function typeLoop() {
+    if (!isDeleting) {
+      // Typing forward
+      if (index < fullText.length) {
+        typingSubtitle.textContent += fullText.charAt(index);
+        index++;
+        setTimeout(typeLoop, typingSpeed);
+      } else {
+        // Finished typing, pause then start deleting
+        setTimeout(() => {
+          isDeleting = true;
+          setTimeout(typeLoop, deletingSpeed);
+        }, pauseAfterTyping);
+      }
     } else {
-      setTimeout(() => {
-        typingSubtitle.textContent = '';
-        index = 0;
-        typeWriter();
-      }, 2500);
+      // Deleting
+      if (index > 0) {
+        typingSubtitle.textContent = fullText.substring(0, index - 1);
+        index--;
+        setTimeout(typeLoop, deletingSpeed);
+      } else {
+        // Finished deleting, pause then start typing again
+        isDeleting = false;
+        setTimeout(typeLoop, pauseAfterDeleting);
+      }
     }
   }
 
   window.onload = () => {
-    typeWriter();
+    typeLoop();
   };
 
   startChatBtn.addEventListener('click', () => {

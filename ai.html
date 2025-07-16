@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>made by kev</title>
+<!-- Google Fonts Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    font-family: 'Inter', sans-serif;
+    background: white;
+    color: #111;
+  }
+  body {
+    display: flex;
+    justify-content: flex-start; /* left align */
+    align-items: center;
+    padding-left: 50px;
+    box-sizing: border-box;
+    height: 100vh;
+  }
+  .welcome-container {
+    max-width: 450px;
+    text-align: left;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 4.5rem;
+    margin: 0 0 15px 0;
+    user-select: none;
+  }
+  p.tagline {
+    font-weight: 400;
+    font-size: 1.25rem;
+    margin: 0 0 40px 0;
+    color: #555;
+    user-select: none;
+  }
+  button {
+    background: #4caf50;
+    border: none;
+    color: white;
+    padding: 18px 40px;
+    font-size: 1.3rem;
+    border-radius: 30px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgb(76 175 80 / 0.4);
+    font-family: 'Inter', sans-serif;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  button:active {
+    transform: scale(0.95);
+  }
+  #loading {
+    display: none;
+    margin-top: 20px;
+    text-align: center;
+  }
+  /* Spinner style */
+  .spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #4caf50;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+
+  /* Fullscreen embed styles (hidden initially) */
+  #chat-container {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+  }
+  #deployment-e8058249-b613-4701-8e16-bd69b6eb9c39 {
+    width: 100% !important;
+    height: 100% !important;
+  }
+</style>
+</head>
+<body>
+  <div class="welcome-container" id="welcome">
+    <h1>Welcome to Kev AI</h1>
+    <p class="tagline">A versatile, ChatGPT-style assistant for any task.</p>
+    <button id="start-chat">Let's Chat</button>
+    <div id="loading">
+      <div class="spinner"></div>
+      <div>Loading chatbot...</div>
+    </div>
+  </div>
+
+  <div id="chat-container">
+    <div id="deployment-e8058249-b613-4701-8e16-bd69b6eb9c39"></div>
+  </div>
+
+  <script src="https://studio.pickaxe.co/api/embed/bundle.js" defer></script>
+
+  <script>
+    const startBtn = document.getElementById('start-chat');
+    const loading = document.getElementById('loading');
+    const welcome = document.getElementById('welcome');
+    const chatContainer = document.getElementById('chat-container');
+
+    startBtn.addEventListener('click', () => {
+      startBtn.style.display = 'none';
+      loading.style.display = 'block';
+
+      setTimeout(() => {
+        welcome.style.display = 'none';
+        chatContainer.style.display = 'block';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

@@ -19,7 +19,9 @@
       font-family: 'Inter', sans-serif;
       background: #ffffff;
       color: #111;
-      overflow: hidden;
+      /* allow scrolling for embed chat on mobile */
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     body {
@@ -29,17 +31,25 @@
       align-items: center;
       text-align: center;
       padding: 2rem;
-      transition: none; /* disable transitions on body */
+      min-height: 100vh;
     }
 
     .welcome-container {
       max-width: 480px;
+      width: 100%;
     }
 
     h1 {
       font-size: 3.5rem;
       font-weight: 700;
       margin-bottom: 0.3em;
+      user-select: none;
+    }
+
+    .interactive-area {
+      transition: transform 0.3s ease;
+      will-change: transform;
+      display: inline-block;
     }
 
     .subtitle {
@@ -48,7 +58,14 @@
       margin-bottom: 2.5rem;
       white-space: nowrap;
       overflow: hidden;
+      border-right: 0.15em solid #3b82f6;
       min-height: 1.5em; /* keep height so no jump */
+      animation: blink-caret 0.75s step-end infinite;
+      user-select: none;
+    }
+
+    @keyframes blink-caret {
+      50% { border-color: transparent; }
     }
 
     .chat-btn {
@@ -96,20 +113,22 @@
 
     #chat-container {
       display: none;
-      position: fixed;
-      top: 0; 
-      left: 0;
+      flex: 1 1 auto;
       width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      z-index: 10000;
-      background: white;
-      /* No padding/margin, no inherited styles */
+      height: 100vh; /* fullscreen */
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      background: #fff;
+      -webkit-overflow-scrolling: touch;
+      z-index: 9999;
     }
 
     #deployment-e8058249-b613-4701-8e16-bd69b6eb9c39 {
       width: 100% !important;
       height: 100% !important;
+      min-height: 100vh;
     }
 
     #loading {
@@ -118,7 +137,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       display: none;
-      z-index: 11000;
+      z-index: 10000;
     }
 
     .loader {
@@ -149,8 +168,10 @@
 
 <div class="welcome-container" id="welcome">
   <h1>Welcome to Kev AI</h1>
-  <p class="subtitle" id="typing-subtitle"></p>
-  <button class="chat-btn" id="startChatBtn">Let's Chat</button>
+  <div class="interactive-area">
+    <p class="subtitle" id="typing-subtitle"></p>
+    <button class="chat-btn" id="startChatBtn">Let's Chat</button>
+  </div>
 </div>
 
 <div id="chat-container">
@@ -165,44 +186,43 @@
   const chatContainer = document.getElementById('chat-container');
   const loading = document.getElementById('loading');
   const typingSubtitle = document.getElementById('typing-subtitle');
+  const interactiveArea = document.querySelector('.interactive-area');
 
   const fullText = "A versatile, ChatGPT-style assistant for any task.";
-  const typingSpeed = 50; // ms per character
-  const deletingSpeed = 30; // ms per character
-  const pauseAfterTyping = 1500; // ms pause after full text
-  const pauseAfterDeleting = 500; // ms pause before typing again
-
   let index = 0;
-  let isDeleting = false;
+  const typingSpeed = 50;
 
-  function typeLoop() {
-    if (!isDeleting) {
-      typingSubtitle.textContent = fullText.substring(0, index + 1);
+  function typeWriter() {
+    if (index < fullText.length) {
+      typingSubtitle.textContent += fullText.charAt(index);
       index++;
-
-      if (index === fullText.length) {
-        isDeleting = true;
-        setTimeout(typeLoop, pauseAfterTyping);
-      } else {
-        setTimeout(typeLoop, typingSpeed);
-      }
+      setTimeout(typeWriter, typingSpeed);
     } else {
-      typingSubtitle.textContent = fullText.substring(0, index - 1);
-      index--;
-
-      if (index === 0) {
-        isDeleting = false;
-        setTimeout(typeLoop, pauseAfterDeleting);
-      } else {
-        setTimeout(typeLoop, deletingSpeed);
-      }
+      // After typing complete, reset after 2.5s and repeat
+      setTimeout(() => {
+        typingSubtitle.textContent = '';
+        index = 0;
+        typeWriter();
+      }, 2500);
     }
   }
 
-  // Start the typing loop on page load
+  // Start typing on page load
   window.onload = () => {
-    typeLoop();
+    typeWriter();
   };
+
+  // Hover tilt effect only on subtitle+button container
+  document.addEventListener('mousemove', (e) => {
+    const { innerWidth, innerHeight } = window;
+    const x = (e.clientX / innerWidth - 0.5) * 10;
+    const y = (e.clientY / innerHeight - 0.5) * 10;
+    interactiveArea.style.transform = `rotateX(${y}deg) rotateY(${-x}deg)`;
+  });
+
+  document.addEventListener('mouseleave', () => {
+    interactiveArea.style.transform = `rotateX(0deg) rotateY(0deg)`;
+  });
 
   startChatBtn.addEventListener('click', () => {
     welcomeDiv.style.display = 'none';
@@ -210,9 +230,7 @@
 
     setTimeout(() => {
       loading.style.display = 'none';
-      chatContainer.style.display = 'block';
-      // Remove any scroll or overflow on body to prevent scrolling behind the chat
-      document.body.style.overflow = 'hidden';
+      chatContainer.style.display = 'flex';
     }, 1200);
   });
 </script>

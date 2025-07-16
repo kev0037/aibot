@@ -3,128 +3,136 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>made by kev</title>
-<!-- Google Fonts Inter -->
+<title>made my kev</title>
+
+<!-- Inter font from Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+
 <style>
+  /* Reset and basics */
   html, body {
     margin: 0; padding: 0; height: 100%; width: 100%;
     font-family: 'Inter', sans-serif;
     background: white;
     color: #111;
-  }
-  body {
-    display: flex;
-    justify-content: flex-start; /* left align */
-    align-items: center;
-    padding-left: 50px;
-    box-sizing: border-box;
-    height: 100vh;
-  }
-  .welcome-container {
-    max-width: 450px;
-    text-align: left;
-  }
-  h1 {
-    font-weight: 700;
-    font-size: 4.5rem;
-    margin: 0 0 15px 0;
-    user-select: none;
-  }
-  p.tagline {
-    font-weight: 400;
-    font-size: 1.25rem;
-    margin: 0 0 40px 0;
-    color: #555;
-    user-select: none;
-  }
-  button {
-    background: #4caf50;
-    border: none;
-    color: white;
-    padding: 18px 40px;
-    font-size: 1.3rem;
-    border-radius: 30px;
-    cursor: pointer;
-    user-select: none;
-    transition: transform 0.2s ease, background-color 0.3s ease;
-    box-shadow: 0 4px 8px rgb(76 175 80 / 0.4);
-    font-family: 'Inter', sans-serif;
-  }
-  button:hover {
-    background-color: #45a049;
-  }
-  button:active {
-    transform: scale(0.95);
-  }
-  #loading {
-    display: none;
-    margin-top: 20px;
-    text-align: center;
-  }
-  /* Spinner style */
-  .spinner {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #4caf50;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin: 0 auto;
-  }
-  @keyframes spin {
-    0% { transform: rotate(0deg);}
-    100% { transform: rotate(360deg);}
+    overflow: hidden; /* prevent scroll on body */
   }
 
-  /* Fullscreen embed styles (hidden initially) */
+  /* Container for welcome screen */
+  .welcome-container {
+    height: 100vh;
+    width: 100vw;
+    max-width: 480px;
+    padding: 2rem 1.5rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  /* Heading and subtitle */
+  h1 {
+    font-size: 3.5rem;
+    margin: 0 0 0.3em 0;
+    font-weight: 700;
+    user-select: none;
+  }
+  p.subtitle {
+    font-size: 1.2rem;
+    margin: 0 0 2.5rem 0;
+    color: #555;
+  }
+
+  /* Button styles */
+  button.chat-btn {
+    font-size: 1.2rem;
+    padding: 0.8rem 2.2rem;
+    border-radius: 30px;
+    border: none;
+    background: #3b82f6; /* blue */
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgb(59 130 246 / 0.4);
+    transition: background-color 0.3s ease, transform 0.15s ease;
+    user-select: none;
+  }
+  button.chat-btn:hover {
+    background: #2563eb;
+  }
+  button.chat-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Chat embed container (hidden initially) */
   #chat-container {
-    display: none;
     position: fixed;
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    margin: 0; padding: 0;
+    background: white;
+    display: none; /* show on click */
     box-sizing: border-box;
+    overflow: auto; /* allow scroll inside if needed */
+    z-index: 9999;
   }
+
+  /* Pickaxe embed styling */
   #deployment-e8058249-b613-4701-8e16-bd69b6eb9c39 {
     width: 100% !important;
     height: 100% !important;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 480px) {
+    .welcome-container {
+      max-width: 100vw;
+      padding: 1.5rem 1rem;
+    }
+    h1 {
+      font-size: 2.7rem;
+    }
+    p.subtitle {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+    button.chat-btn {
+      font-size: 1rem;
+      padding: 0.7rem 1.8rem;
+    }
   }
 </style>
 </head>
 <body>
-  <div class="welcome-container" id="welcome">
-    <h1>Welcome to Kev AI</h1>
-    <p class="tagline">A versatile, ChatGPT-style assistant for any task.</p>
-    <button id="start-chat">Let's Chat</button>
-    <div id="loading">
-      <div class="spinner"></div>
-      <div>Loading chatbot...</div>
-    </div>
-  </div>
 
-  <div id="chat-container">
-    <div id="deployment-e8058249-b613-4701-8e16-bd69b6eb9c39"></div>
-  </div>
+<!-- Welcome Screen -->
+<div class="welcome-container" id="welcome">
+  <h1>Welcome to Kev AI</h1>
+  <p class="subtitle">A versatile, ChatGPT-style assistant for any task.</p>
+  <button class="chat-btn" id="startChatBtn">Let's Chat</button>
+</div>
 
-  <script src="https://studio.pickaxe.co/api/embed/bundle.js" defer></script>
+<!-- Chat Embed Container -->
+<div id="chat-container">
+  <div id="deployment-e8058249-b613-4701-8e16-bd69b6eb9c39"></div>
+</div>
 
-  <script>
-    const startBtn = document.getElementById('start-chat');
-    const loading = document.getElementById('loading');
-    const welcome = document.getElementById('welcome');
-    const chatContainer = document.getElementById('chat-container');
+<!-- Pickaxe Embed Script -->
+<script src="https://studio.pickaxe.co/api/embed/bundle.js" defer></script>
 
-    startBtn.addEventListener('click', () => {
-      startBtn.style.display = 'none';
-      loading.style.display = 'block';
+<script>
+  const startChatBtn = document.getElementById('startChatBtn');
+  const welcomeDiv = document.getElementById('welcome');
+  const chatContainer = document.getElementById('chat-container');
 
-      setTimeout(() => {
-        welcome.style.display = 'none';
-        chatContainer.style.display = 'block';
-      }, 2000);
-    });
-  </script>
+  startChatBtn.addEventListener('click', () => {
+    // Hide welcome, show chat
+    welcomeDiv.style.display = 'none';
+    chatContainer.style.display = 'block';
+  });
+</script>
+
 </body>
 </html>

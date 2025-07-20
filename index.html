@@ -4,7 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Kev AI</title>
+  
+  <!-- Meta Description -->
+  <meta name="description" content="Kev AI is a versatile assistant designed to help with any task, from productivity to creativity." />
 
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
@@ -66,7 +70,6 @@
       text-align: center;
       letter-spacing: 0.02em;
       user-select: none;
-      /* optional smooth font rendering */
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
@@ -167,20 +170,30 @@
 </head>
 <body>
 
-<div id="loading">
-  <div class="loader"></div>
+<!-- Fallback message for users without JS -->
+<noscript>
+  <div style="text-align:center; padding: 2rem;">
+    <p><strong>Kev AI</strong> requires JavaScript to function properly. Please enable JavaScript in your browser settings.</p>
+  </div>
+</noscript>
+
+<!-- Loading spinner -->
+<div id="loading" role="status" aria-live="polite" aria-label="Loading chat interface">
+  <div class="loader" aria-hidden="true"></div>
 </div>
 
-<div class="welcome-container" id="welcome">
-  <h1>Welcome to Kev AI</h1>
+<!-- Welcome screen -->
+<main class="welcome-container" id="welcome" role="main" aria-labelledby="welcome-heading">
+  <h1 id="welcome-heading">Welcome to Kev AI</h1>
 
   <div class="subtitle-button-wrapper">
-    <p class="subtitle" id="typing-subtitle"></p>
-    <button class="chat-btn" id="startChatBtn">Let's Chat</button>
+    <p class="subtitle" id="typing-subtitle" aria-live="polite"></p>
+    <button class="chat-btn" id="startChatBtn" aria-label="Start chatting with Kev AI">Let's Chat</button>
   </div>
-</div>
+</main>
 
-<div id="chat-container">
+<!-- Chat area -->
+<div id="chat-container" aria-label="Chat Interface">
   <div id="deployment-e8058249-b613-4701-8e16-bd69b6eb9c39"></div>
 </div>
 
@@ -204,26 +217,22 @@
 
   function typeLoop() {
     if (!isDeleting) {
-      // Typing forward
       if (index < fullText.length) {
         typingSubtitle.textContent += fullText.charAt(index);
         index++;
         setTimeout(typeLoop, typingSpeed);
       } else {
-        // Finished typing, pause then start deleting
         setTimeout(() => {
           isDeleting = true;
           setTimeout(typeLoop, deletingSpeed);
         }, pauseAfterTyping);
       }
     } else {
-      // Deleting
       if (index > 0) {
         typingSubtitle.textContent = fullText.substring(0, index - 1);
         index--;
         setTimeout(typeLoop, deletingSpeed);
       } else {
-        // Finished deleting, pause then start typing again
         isDeleting = false;
         setTimeout(typeLoop, pauseAfterDeleting);
       }

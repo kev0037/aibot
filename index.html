@@ -206,20 +206,30 @@
   const loading = document.getElementById('loading');
   const typingSubtitle = document.getElementById('typing-subtitle');
 
-  const fullText = "A versatile, AI assistant for any task.";
+  // Typing subtitle animation array
+  const subtitles = [
+    "A versatile, AI assistant for any task.",
+    "Boost your productivity with Kev AI.",
+    "Your creative companion and helper.",
+    "Start chatting and explore."
+  ];
+
   const typingSpeed = 50;
   const deletingSpeed = 30;
   const pauseAfterTyping = 2000;
   const pauseAfterDeleting = 500;
 
-  let index = 0;
+  let currentSubtitleIndex = 0;
+  let charIndex = 0;
   let isDeleting = false;
 
   function typeLoop() {
+    const currentText = subtitles[currentSubtitleIndex];
+
     if (!isDeleting) {
-      if (index < fullText.length) {
-        typingSubtitle.textContent += fullText.charAt(index);
-        index++;
+      if (charIndex < currentText.length) {
+        typingSubtitle.textContent += currentText.charAt(charIndex);
+        charIndex++;
         setTimeout(typeLoop, typingSpeed);
       } else {
         setTimeout(() => {
@@ -228,12 +238,13 @@
         }, pauseAfterTyping);
       }
     } else {
-      if (index > 0) {
-        typingSubtitle.textContent = fullText.substring(0, index - 1);
-        index--;
+      if (charIndex > 0) {
+        typingSubtitle.textContent = currentText.substring(0, charIndex - 1);
+        charIndex--;
         setTimeout(typeLoop, deletingSpeed);
       } else {
         isDeleting = false;
+        currentSubtitleIndex = (currentSubtitleIndex + 1) % subtitles.length;
         setTimeout(typeLoop, pauseAfterDeleting);
       }
     }

@@ -57,6 +57,27 @@
       width: 100%;
       max-width: 480px;
     }
+  
+  .cursor-particle {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background-color: black; /* Black particles */
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.8;
+    will-change: transform, opacity;
+    animation: fall 1s linear forwards;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+  }
+
 
     .subtitle {
       font-size: 1.2rem;
@@ -263,6 +284,47 @@
       chatContainer.style.display = 'flex';
     }, 1200);
   });
+  const particles = [];
+
+  function createParticle(x, y) {
+    const particle = document.createElement('div');
+    particle.classList.add('cursor-particle');
+    particle.style.left = x + 'px';
+    particle.style.top = y + 'px';
+    particle.vx = (Math.random() - 0.5) * 0.5;
+    particle.vy = 1 + Math.random();
+    particle.life = 60 + Math.random() * 30;
+    document.body.appendChild(particle);
+    particles.push(particle);
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    for (let i = 0; i < 2; i++) {
+      createParticle(e.clientX, e.clientY);
+    }
+  });
+
+  function animateParticles() {
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.life--;
+      if (p.life <= 0) {
+        p.remove();
+        particles.splice(i, 1);
+        continue;
+      }
+      let x = parseFloat(p.style.left);
+      let y = parseFloat(p.style.top);
+      x += p.vx;
+      y += p.vy;
+      p.style.opacity = p.life / 90;
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+    }
+    requestAnimationFrame(animateParticles);
+  }
+
+  animateParticles();
 </script>
 
 </body>
